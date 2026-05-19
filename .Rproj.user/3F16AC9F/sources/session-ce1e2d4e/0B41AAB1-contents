@@ -1,0 +1,150 @@
+---
+title: "ejercicio2"
+output: html_document
+date: "2026-05-19"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+
+
+# Paquetes a usar
+library(readxl)
+library(dplyr)
+
+```
+
+```{r}
+# Lectura y limpieza de datos
+ruta <- "reporte (3).xlsx"
+
+# El Excel trae 5 filas de metadatos antes de la cabecera real,
+# por eso usamos skip = 5 para que la fila 6 sea el encabezado.
+df <- read_excel(ruta, skip = 5)
+
+# La columna A del Excel viene vacía, por ende es mejor eliminarla
+df <- df[, -1]
+
+# Renombramos las dos primeras columnas para mayor claridad
+names(df)[1:2] <- c("Codigo", "Provincia")
+
+# Para mayor orden, se quita la fila TOTAL y posibles filas de pie de página
+df <- df %>%
+  filter(!is.na(Provincia), Codigo != "TOTAL") %>%
+  mutate(across(3:ncol(.), as.numeric))   #se asegura que las variables sean numericas
+```
+
+```{r}
+#  Se definen los rangos de las columnas, cuales hacen referencia a material predominante en paredes,techos y pisos respectivamente,
+#
+#    Excel       ->  posición en df
+#    D a L  (paredes)  -> 3:11
+#    M a T  (techos)   -> 12:19
+#    U a AA (pisos)    -> 20:26
+paredes <- 3:11
+techos  <- 12:19
+pisos   <- 20:26
+
+df_indicadores <- df %>%
+  mutate(
+    # % de viviendas con paredes de "Ladrillo o bloque de cemento"  (columna D = pos. 3)
+    pct_paredes_ladrillo = .[[3]] / rowSums(.[, paredes], na.rm = TRUE) * 100,
+
+    # % de viviendas con techos de "Concreto armado"  (columna M = pos. 12)
+    pct_techos_concreto  = .[[12]] / rowSums(.[, techos], na.rm = TRUE) * 100,
+
+    # % de viviendas con pisos de Madera, Cemento, Tierra u Otro material
+    # (columnas X, Y, Z, AA = posiciones 23, 24, 25, 26)
+    pct_pisos_precario   = rowSums(.[, c(23, 24, 25, 26)], na.rm = TRUE) /
+                           rowSums(.[, pisos], na.rm = TRUE) * 100
+  ) %>%
+  # Para quedarnos solo con los datos de interés a nivel provincial y los 3 indicadores creados
+  select(Provincia,
+         pct_paredes_ladrillo,
+         pct_techos_concreto,
+         pct_pisos_precario)
+```
+
+
+```{r}
+
+#  Resultado
+print(df_indicadores, n = 20)
+```
+
+```{r}
+
+```
+
+
+
+```{r}
+#crear excel
+writexl::write_xlsx(df_indicadores, "indicadores_vivienda.xlsx")
+```
+
+
+```{r}
+# indice de pobreza
+# ============================================================
+
+library(psych)   # cortest.bartlett, KMO, principal (PCA)
+
+# COHERENCIA CONCEPTUAL: invertimos pisos para que las 3 vayan en el mismo sentido
+df_indicadores <- df_indicadores %>%
+  mutate(pct_pisos_buenos = 100 - pct_pisos_precario)
+
+vars <- df_indicadores %>%
+  select(pct_paredes_ladrillo, pct_techos_concreto, pct_pisos_buenos)
+
+#  DIAGNÓSTICOS previos al cálculo algebraico --------------
+round(cor(vars), 3)                                   # correlaciones altas?
+cortest.bartlett(cor(vars), n = nrow(vars))           # Bartlett: p debe ser < 0.05
+KMO(vars)                                             # KMO: ojalá > 0.6
+
+```
+
+
+```{r}
+# ÍNDICE ALGEBRAICO: primer Componente Principal ---------
+pca <- principal(vars, nfactors = 1, scores = TRUE)
+print(pca, digits = 3)
+indice_algebraico <- as.numeric(pca$scores)
+```
+
+```{r}
+#  ÍNDICE ARITMÉTICO: promedio simple de variables estandarizadas
+vars_z <- scale(vars)
+indice_aritmetico <- rowMeans(vars_z)
+```
+
+```{r}
+#  ¿Dan lo mismo? ------------------------------------------
+cor.test(indice_algebraico, indice_aritmetico)
+```
+
+
+```{r}
+#  Data frame final ----------------------------------------
+df_final <- df_indicadores %>%
+  mutate(indice_algebraico = indice_algebraico,
+         indice_aritmetico = indice_aritmetico) %>%
+  arrange(desc(indice_algebraico))
+
+head(df_final, 10)
+```
+```{r}
+#  Guardar datos
+write.csv(df_final, "indice_riqueza_provincias.csv", row.names = FALSE)
+```
+
+```{r}
+rmarkdown::render("casocenso.rmd")
+
+```
+
+
+rmarkdown::render("caso2.Rmd")

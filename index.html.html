@@ -419,28 +419,28 @@ df_indicadores &lt;- df %&gt;%
 <pre class="r"><code>#  Resultado
 print(df_indicadores, n = 20)</code></pre>
 <pre><code>## # A tibble: 196 × 4
-##    Provincia         pct_paredes_ladrillo pct_techos_concreto pct_pisos_precario
-##    &lt;chr&gt;                            &lt;dbl&gt;               &lt;dbl&gt;              &lt;dbl&gt;
-##  1 Amazonas, provin…               27.0                16.2                 91.9
-##  2 Amazonas, provin…               23.7                11.2                 96.6
-##  3 Amazonas, provin…               21.9                 9.47                97.6
-##  4 Amazonas, provin…                3.00                0.576               99.8
-##  5 Amazonas, provin…                3.37                1.47                99.6
-##  6 Amazonas, provin…               17.4                 5.39                97.0
-##  7 Amazonas, provin…               15.7                 8.59                96.7
-##  8 Áncash, provinci…               45.6                40.5                 81.3
-##  9 Áncash, provinci…                0.773               0.464               99.8
-## 10 Áncash, provinci…                2.56                0.766               99.6
-## 11 Áncash, provinci…                9.34                3.30                98.0
-## 12 Áncash, provinci…                7.42                3.83                98.5
-## 13 Áncash, provinci…               14.7                11.9                 96.8
-## 14 Áncash, provinci…                2.06                1.20                99.7
-## 15 Áncash, provinci…               38.6                19.8                 92.7
-## 16 Áncash, provinci…                2.12                0.938               99.8
-## 17 Áncash, provinci…                6.22                4.01                99.1
-## 18 Áncash, provinci…               48.6                27.6                 88.8
-## 19 Áncash, provinci…               16.0                12.4                 95.4
-## 20 Áncash, provinci…                0.544               0.255               99.9
+##    Provincia                              pct_paredes_ladrillo pct_techos_concreto pct_pisos_precario
+##    &lt;chr&gt;                                                 &lt;dbl&gt;               &lt;dbl&gt;              &lt;dbl&gt;
+##  1 Amazonas, provincia: Chachapoyas                     27.0                16.2                 91.9
+##  2 Amazonas, provincia: Bagua                           23.7                11.2                 96.6
+##  3 Amazonas, provincia: Bongara                         21.9                 9.47                97.6
+##  4 Amazonas, provincia: Condorcanqui                     3.00                0.576               99.8
+##  5 Amazonas, provincia: Luya                             3.37                1.47                99.6
+##  6 Amazonas, provincia: Rodríguez de Men…               17.4                 5.39                97.0
+##  7 Amazonas, provincia: Utcubamba                       15.7                 8.59                96.7
+##  8 Áncash, provincia: Huaraz                            45.6                40.5                 81.3
+##  9 Áncash, provincia: Aija                               0.773               0.464               99.8
+## 10 Áncash, provincia: Antonio Raymondi                   2.56                0.766               99.6
+## 11 Áncash, provincia: Asunción                           9.34                3.30                98.0
+## 12 Áncash, provincia: Bolognesi                          7.42                3.83                98.5
+## 13 Áncash, provincia: Carhuaz                           14.7                11.9                 96.8
+## 14 Áncash, provincia: Carlos Fermín Fitz…                2.06                1.20                99.7
+## 15 Áncash, provincia: Casma                             38.6                19.8                 92.7
+## 16 Áncash, provincia: Corongo                            2.12                0.938               99.8
+## 17 Áncash, provincia: Huari                              6.22                4.01                99.1
+## 18 Áncash, provincia: Huarmey                           48.6                27.6                 88.8
+## 19 Áncash, provincia: Huaylas                           16.0                12.4                 95.4
+## 20 Áncash, provincia: Mariscal Luzuriaga                 0.544               0.255               99.9
 ## # ℹ 176 more rows</code></pre>
 <pre class="r"><code>#crear excel
 writexl::write_xlsx(df_indicadores, &quot;indicadores_vivienda.xlsx&quot;)</code></pre>
@@ -525,20 +525,19 @@ df_final &lt;- df_indicadores %&gt;%
 
 head(df_final, 10)</code></pre>
 <pre><code>## # A tibble: 10 × 7
-##    Provincia         pct_paredes_ladrillo pct_techos_concreto pct_pisos_precario
-##    &lt;chr&gt;                            &lt;dbl&gt;               &lt;dbl&gt;              &lt;dbl&gt;
-##  1 Lima, provincia:…                 85.1                74.3               54.0
-##  2 Provincia Consti…                 74.8                64.1               61.3
-##  3 Arequipa, provin…                 86.5                70.7               69.8
-##  4 Moquegua, provin…                 81.4                69.1               71.7
-##  5 La Lbertad, prov…                 69.4                63.3               68.4
-##  6 Ica, provincia: …                 71.9                62.1               74.7
-##  7 Lambayeque, prov…                 65.2                55.7               69.4
-##  8 Tacna, provincia…                 86.0                56.3               77.6
-##  9 Junín, provincia…                 66.9                57.7               78.4
-## 10 Ica, provincia: …                 70.3                52.0               78.7
-## # ℹ 3 more variables: pct_pisos_buenos &lt;dbl&gt;, indice_algebraico &lt;dbl&gt;,
-## #   indice_aritmetico &lt;dbl&gt;</code></pre>
+##    Provincia             pct_paredes_ladrillo pct_techos_concreto pct_pisos_precario pct_pisos_buenos
+##    &lt;chr&gt;                                &lt;dbl&gt;               &lt;dbl&gt;              &lt;dbl&gt;            &lt;dbl&gt;
+##  1 Lima, provincia: Lima                 85.1                74.3               54.0             46.0
+##  2 Provincia Constituci…                 74.8                64.1               61.3             38.7
+##  3 Arequipa, provincia:…                 86.5                70.7               69.8             30.2
+##  4 Moquegua, provincia:…                 81.4                69.1               71.7             28.3
+##  5 La Lbertad, provinci…                 69.4                63.3               68.4             31.6
+##  6 Ica, provincia: Ica                   71.9                62.1               74.7             25.3
+##  7 Lambayeque, provinci…                 65.2                55.7               69.4             30.6
+##  8 Tacna, provincia: Ta…                 86.0                56.3               77.6             22.4
+##  9 Junín, provincia: Hu…                 66.9                57.7               78.4             21.6
+## 10 Ica, provincia: Pisco                 70.3                52.0               78.7             21.3
+## # ℹ 2 more variables: indice_algebraico &lt;dbl&gt;, indice_aritmetico &lt;dbl&gt;</code></pre>
 <pre class="r"><code>#  Guardar datos
 write.csv(df_final, &quot;indice_riqueza_provincias.csv&quot;, row.names = FALSE)</code></pre>
 
